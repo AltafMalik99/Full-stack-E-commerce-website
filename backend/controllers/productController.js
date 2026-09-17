@@ -1,8 +1,27 @@
+import cloudinary from "../config/cloudinary.js";
 import Product from "../models/Product.js";
 import Category from "../models/Category.js";
 import { createNotification } from "./notificationController.js";
 
 const LOW_STOCK_THRESHOLD = 5;
+
+function uploadToCloudinary(buffer) {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        folder: "shopco/products",
+        resource_type: "image",
+      },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      }
+    );
+
+    stream.end(buffer);
+  });
+}
+
 
 /**
  * GET /api/products
@@ -93,11 +112,17 @@ export async function getAdminProducts(req, res, next) {
 }
 
 // POST /api/admin/products — admin only
+
+
 export async function createProduct(req, res, next) {
   try {
     const body = { ...req.body };
-    if (req.file) body.image = `/uploads/${req.file.filename}`;
+    // if (req.file) body.image = `/uploads/${req.file.filename}`;
 
+if (req.file) {
+  const result = await uploadToCloudinary(req.file.buffer);
+  body.image = result.secure_url;
+}
     const product = await Product.create(body);
     await product.populate("category", "name");
 
@@ -115,24 +140,39 @@ export async function createProduct(req, res, next) {
 export async function updateProduct(req, res, next) {
   try {
     const body = { ...req.body };
-    if (req.file) body.image = `/uploads/${req.file.filename}`;
+
+    if (req.file) {
+      const result = await uploadToCloudinary(req.file.buffer);
+      body.image = result.secure_url;
+    }
 
     const product = await Product.findByIdAndUpdate(req.params.id, body, {
       new: true,
       runValidators: true,
     }).populate("category", "name");
 
-    if (!product) return res.status(404).json({ message: "Product not found." });
-
-    if (product.stock <= LOW_STOCK_THRESHOLD) {
-      createNotification("low_stock", `Low stock: "${product.name}" has ${product.stock} left.`).catch(() => {});
+    if (!product) {
+      return res.status(404).json({ message: "Product not found." });
     }
 
-    res.json({ message: "Product updated", product: formatProduct(product) });
+    if (product.stock <= LOW_STOCK_THRESHOLD) {
+      createNotification(
+        "low_stock",
+        `Low stock: "${product.name}" has ${product.stock} left.`
+      ).catch(() => {});
+    }
+
+    res.json({
+      message: "Product updated",
+      product: formatProduct(product),
+    });
   } catch (err) {
     next(err);
   }
 }
+
+
+
 
 // DELETE /api/admin/products/:id — admin only
 export async function deleteProduct(req, res, next) {

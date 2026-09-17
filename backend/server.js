@@ -76,7 +76,7 @@
 //   console.log(`Server running on http://localhost:${PORT}`);
 // });
 import express from "express";
-import dotenv from "dotenv";
+import "dotenv/config";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
@@ -97,7 +97,6 @@ import adminRoutes from "./routes/adminRoutes.js";
 
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 
-dotenv.config();
 
 // DNS fix for MongoDB Atlas connection
 dns.setServers(["8.8.8.8", "1.1.1.1"]);

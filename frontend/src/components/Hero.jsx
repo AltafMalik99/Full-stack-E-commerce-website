@@ -32,7 +32,7 @@ export default function Hero() {
 
       <div className="hero-image">
         <img
-          src="https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?w=800&q=80"
+          src="https://altafmalik99.github.io/image_1/image/homeimage.png"
           alt="Fashion models wearing the latest styles"
         />
       </div>
