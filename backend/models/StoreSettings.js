@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-// Singleton document — only one settings record should ever exist.
 const storeSettingsSchema = new mongoose.Schema(
   {
     storeName: { type: String, default: "SHOP.CO" },

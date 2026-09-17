@@ -7,10 +7,6 @@ export function notFound(req, res, next) {
   next(error);
 }
 
-/**
- * Central error handler - catches errors thrown/passed via next(err)
- * anywhere in the app and returns a consistent JSON error shape.
- */
 export function errorHandler(err, req, res, next) {
   const statusCode = res.statusCode && res.statusCode !== 200 ? res.statusCode : 500;
   res.status(statusCode).json({

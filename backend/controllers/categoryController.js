@@ -1,7 +1,6 @@
 import Category from "../models/Category.js";
 import Product from "../models/Product.js";
 
-// GET /api/categories — public, only active categories
 export async function getCategories(req, res, next) {
   try {
     const categories = await Category.find({ status: "active" }).sort({ name: 1 });
@@ -11,7 +10,6 @@ export async function getCategories(req, res, next) {
   }
 }
 
-// GET /api/admin/categories — admin only, all categories + search
 export async function getAdminCategories(req, res, next) {
   try {
     const { search } = req.query;
@@ -20,7 +18,6 @@ export async function getAdminCategories(req, res, next) {
 
     const categories = await Category.find(filter).sort({ createdAt: -1 });
 
-    // attach product count per category for the admin table
     const withCounts = await Promise.all(
       categories.map(async (cat) => {
         const productCount = await Product.countDocuments({ category: cat._id });
@@ -34,7 +31,6 @@ export async function getAdminCategories(req, res, next) {
   }
 }
 
-// GET /api/admin/categories/:id
 export async function getCategoryById(req, res, next) {
   try {
     const category = await Category.findById(req.params.id);
@@ -45,7 +41,6 @@ export async function getCategoryById(req, res, next) {
   }
 }
 
-// POST /api/admin/categories — admin only
 export async function createCategory(req, res, next) {
   try {
     const body = { ...req.body };
@@ -63,7 +58,6 @@ export async function createCategory(req, res, next) {
   }
 }
 
-// PUT /api/admin/categories/:id — admin only
 export async function updateCategory(req, res, next) {
   try {
     const body = { ...req.body };
@@ -81,7 +75,6 @@ export async function updateCategory(req, res, next) {
   }
 }
 
-// DELETE /api/admin/categories/:id — admin only
 export async function deleteCategory(req, res, next) {
   try {
     const inUse = await Product.countDocuments({ category: req.params.id });

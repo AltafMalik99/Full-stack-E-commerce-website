@@ -1,14 +1,10 @@
 import Notification from "../models/Notification.js";
 
-/**
- * Helper used by other controllers to raise an admin notification
- * (new order, new customer, low stock, etc). Not an Express handler.
- */
+
 export async function createNotification(type, message) {
   return Notification.create({ type, message });
 }
 
-// GET /api/admin/notifications
 export async function getNotifications(req, res, next) {
   try {
     const notifications = await Notification.find().sort({ createdAt: -1 }).limit(50);
@@ -19,7 +15,6 @@ export async function getNotifications(req, res, next) {
   }
 }
 
-// PUT /api/admin/notifications/:id/read
 export async function markNotificationRead(req, res, next) {
   try {
     const notification = await Notification.findByIdAndUpdate(
@@ -34,7 +29,6 @@ export async function markNotificationRead(req, res, next) {
   }
 }
 
-// PUT /api/admin/notifications/read-all
 export async function markAllNotificationsRead(req, res, next) {
   try {
     await Notification.updateMany({ read: false }, { read: true });

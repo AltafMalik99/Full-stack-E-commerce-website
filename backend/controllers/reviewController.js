@@ -1,7 +1,6 @@
 import Review from "../models/Review.js";
 import Product from "../models/Product.js";
 
-// POST /api/products/:id/reviews — customer, protected
 export async function createReview(req, res, next) {
   try {
     const { rating, comment } = req.body;
@@ -16,7 +15,6 @@ export async function createReview(req, res, next) {
       comment,
     });
 
-    // Recalculate the product's average rating
     const allReviews = await Review.find({ product: product._id });
     product.numReviews = allReviews.length;
     product.rating =
@@ -29,7 +27,6 @@ export async function createReview(req, res, next) {
   }
 }
 
-// GET /api/products/:id/reviews — public, approved only
 export async function getProductReviews(req, res, next) {
   try {
     const reviews = await Review.find({ product: req.params.id, approved: true }).sort({
@@ -41,9 +38,7 @@ export async function getProductReviews(req, res, next) {
   }
 }
 
-// ===== ADMIN =====
 
-// GET /api/admin/reviews
 export async function getAdminReviews(req, res, next) {
   try {
     const { search, approved } = req.query;
@@ -69,7 +64,6 @@ export async function getAdminReviews(req, res, next) {
   }
 }
 
-// PUT /api/admin/reviews/:id/approve
 export async function approveReview(req, res, next) {
   try {
     const review = await Review.findByIdAndUpdate(req.params.id, { approved: true }, { new: true });
@@ -80,7 +74,6 @@ export async function approveReview(req, res, next) {
   }
 }
 
-// DELETE /api/admin/reviews/:id
 export async function deleteReview(req, res, next) {
   try {
     const review = await Review.findByIdAndDelete(req.params.id);

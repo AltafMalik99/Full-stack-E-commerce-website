@@ -1,6 +1,4 @@
-// Run with: npm run seed:admin
-// Creates the first admin user, sample categories, and sample products
-// so you have something to look at immediately after connecting MongoDB.
+
 import dotenv from "dotenv";
 import dns from "dns";
 import bcrypt from "bcryptjs";
@@ -45,7 +43,6 @@ async function run() {
     console.log(`ℹ Admin already exists: ${ADMIN_EMAIL}`);
   }
 
-  // 2. Categories
   const categoryDocs = {};
   for (const cat of CATEGORIES) {
     let doc = await Category.findOne({ name: cat.name });
@@ -56,7 +53,6 @@ async function run() {
     categoryDocs[cat.name] = doc;
   }
 
-  // 3. Sample products (only if none exist yet)
   const productCount = await Product.countDocuments();
   if (productCount === 0) {
     const sampleProducts = [

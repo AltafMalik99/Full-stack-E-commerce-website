@@ -1,11 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
-/**
- * Protects routes by requiring a valid JWT.
- * Token can come from an HTTP-only cookie ("token") or an
- * Authorization: Bearer <token> header.
- */
+
 export async function protect(req, res, next) {
   let token = null;
 
@@ -33,17 +29,14 @@ export async function protect(req, res, next) {
       return res.status(403).json({ message: "Your account has been blocked." });
     }
 
-    req.user = user; // full mongoose doc, used by controllers
+    req.user = user; 
     next();
   } catch (err) {
     return res.status(401).json({ message: "Invalid or expired token." });
   }
 }
 
-/**
- * Restricts a route to users with role: "admin".
- * Must run AFTER `protect`.
- */
+
 export function adminOnly(req, res, next) {
   if (!req.user || req.user.role !== "admin") {
     return res.status(403).json({ message: "Access Denied — admin only." });

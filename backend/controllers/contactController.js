@@ -1,7 +1,6 @@
 import Contact from "../models/Contact.js";
 import { createNotification } from "./notificationController.js";
 
-// POST /api/contact — public, customer submits a support message
 export async function submitContact(req, res, next) {
   try {
     const { name, email, message } = req.body;
@@ -18,7 +17,6 @@ export async function submitContact(req, res, next) {
   }
 }
 
-// GET /api/admin/contacts
 export async function getContacts(req, res, next) {
   try {
     const { status, search } = req.query;
@@ -39,7 +37,6 @@ export async function getContacts(req, res, next) {
   }
 }
 
-// PUT /api/admin/contacts/:id/status
 export async function updateContactStatus(req, res, next) {
   try {
     const { status } = req.body;

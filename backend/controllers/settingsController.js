@@ -1,13 +1,11 @@
 import StoreSettings from "../models/StoreSettings.js";
 
-// Ensures exactly one settings document always exists
 async function getOrCreateSettings() {
   let settings = await StoreSettings.findOne();
   if (!settings) settings = await StoreSettings.create({});
   return settings;
 }
 
-// GET /api/admin/settings
 export async function getSettings(req, res, next) {
   try {
     const settings = await getOrCreateSettings();
@@ -17,7 +15,6 @@ export async function getSettings(req, res, next) {
   }
 }
 
-// PUT /api/admin/settings
 export async function updateSettings(req, res, next) {
   try {
     const settings = await getOrCreateSettings();

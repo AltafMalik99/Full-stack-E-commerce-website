@@ -1,6 +1,5 @@
 import Coupon from "../models/Coupon.js";
 
-// GET /api/admin/coupons
 export async function getCoupons(req, res, next) {
   try {
     const coupons = await Coupon.find().sort({ createdAt: -1 });
@@ -10,7 +9,6 @@ export async function getCoupons(req, res, next) {
   }
 }
 
-// POST /api/admin/coupons
 export async function createCoupon(req, res, next) {
   try {
     const existing = await Coupon.findOne({ code: req.body.code?.toUpperCase() });
@@ -24,7 +22,6 @@ export async function createCoupon(req, res, next) {
   }
 }
 
-// PUT /api/admin/coupons/:id
 export async function updateCoupon(req, res, next) {
   try {
     const coupon = await Coupon.findByIdAndUpdate(req.params.id, req.body, {
@@ -38,7 +35,6 @@ export async function updateCoupon(req, res, next) {
   }
 }
 
-// DELETE /api/admin/coupons/:id
 export async function deleteCoupon(req, res, next) {
   try {
     const coupon = await Coupon.findByIdAndDelete(req.params.id);
@@ -49,7 +45,6 @@ export async function deleteCoupon(req, res, next) {
   }
 }
 
-// POST /api/coupons/validate — public, used at checkout
 export async function validateCoupon(req, res, next) {
   try {
     const { code, orderAmount } = req.body;

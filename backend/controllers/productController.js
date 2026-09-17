@@ -23,12 +23,7 @@ function uploadToCloudinary(buffer) {
 }
 
 
-/**
- * GET /api/products
- * Public — used by the customer website.
- * Supports: category, search, minPrice, maxPrice, sort, page, limit
- * Only returns products with status "active".
- */
+
 export async function getProducts(req, res, next) {
   try {
     const { category, search, minPrice, maxPrice, sort } = req.query;
@@ -38,8 +33,7 @@ export async function getProducts(req, res, next) {
       const categoryDoc = await Category.findOne({
         name: new RegExp(`^${category}$`, "i"),
       });
-      // If the category name doesn't match anything, force zero results
-      // rather than silently ignoring the filter.
+  
       filter.category = categoryDoc ? categoryDoc._id : null;
     }
     if (search) {
@@ -65,7 +59,6 @@ export async function getProducts(req, res, next) {
   }
 }
 
-// GET /api/products/:id — public
 export async function getProductById(req, res, next) {
   try {
     const product = await Product.findById(req.params.id).populate("category", "name");
@@ -76,7 +69,6 @@ export async function getProductById(req, res, next) {
   }
 }
 
-// GET /api/admin/products — admin only, includes inactive products + full filters
 export async function getAdminProducts(req, res, next) {
   try {
     const { search, category, status, stock, sort, page = 1, limit = 20 } = req.query;
@@ -111,13 +103,11 @@ export async function getAdminProducts(req, res, next) {
   }
 }
 
-// POST /api/admin/products — admin only
 
 
 export async function createProduct(req, res, next) {
   try {
     const body = { ...req.body };
-    // if (req.file) body.image = `/uploads/${req.file.filename}`;
 
 if (req.file) {
   const result = await uploadToCloudinary(req.file.buffer);
@@ -136,7 +126,6 @@ if (req.file) {
   }
 }
 
-// PUT /api/admin/products/:id — admin only
 export async function updateProduct(req, res, next) {
   try {
     const body = { ...req.body };
@@ -174,7 +163,6 @@ export async function updateProduct(req, res, next) {
 
 
 
-// DELETE /api/admin/products/:id — admin only
 export async function deleteProduct(req, res, next) {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
@@ -185,7 +173,6 @@ export async function deleteProduct(req, res, next) {
   }
 }
 
-// PATCH /api/admin/products/:id/stock — admin only, increase/decrease stock
 export async function updateStock(req, res, next) {
   try {
     const { change } = req.body; // e.g. +5 or -3
@@ -201,7 +188,6 @@ export async function updateStock(req, res, next) {
   }
 }
 
-// Helper — normalize a Mongo product doc for the frontend
 function formatProduct(p) {
   return {
     id: p._id,

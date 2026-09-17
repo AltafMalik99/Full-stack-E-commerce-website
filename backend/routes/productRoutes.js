@@ -5,7 +5,6 @@ import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// Public — customer website
 router.get("/", getProducts);
 router.get("/:id", getProductById);
 router.get("/:id/reviews", getProductReviews);

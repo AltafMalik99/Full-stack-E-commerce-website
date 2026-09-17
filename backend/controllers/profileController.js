@@ -1,7 +1,6 @@
 import bcrypt from "bcryptjs";
 import User from "../models/User.js";
 
-// PUT /api/admin/profile — update admin's own name/email/profileImage
 export async function updateProfile(req, res, next) {
   try {
     const updates = {};
@@ -16,7 +15,6 @@ export async function updateProfile(req, res, next) {
   }
 }
 
-// PUT /api/admin/profile/password — change own password
 export async function changePassword(req, res, next) {
   try {
     const { currentPassword, newPassword } = req.body;

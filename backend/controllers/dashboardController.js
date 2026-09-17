@@ -4,7 +4,6 @@ import Order from "../models/Order.js";
 
 const LOW_STOCK_THRESHOLD = 5;
 
-// GET /api/admin/dashboard — top-level stats for the dashboard page
 export async function getDashboardStats(req, res, next) {
   try {
     const [
@@ -69,7 +68,6 @@ export async function getDashboardStats(req, res, next) {
   }
 }
 
-// GET /api/admin/dashboard/sales-overview — monthly sales for the last 12 months (for the bar chart)
 export async function getSalesOverview(req, res, next) {
   try {
     const twelveMonthsAgo = new Date();
@@ -108,7 +106,6 @@ export async function getSalesOverview(req, res, next) {
   }
 }
 
-// GET /api/admin/dashboard/top-products — best sellers by units sold
 export async function getTopProducts(req, res, next) {
   try {
     const orders = await Order.find({ status: { $ne: "Cancelled" } });
@@ -135,7 +132,6 @@ export async function getTopProducts(req, res, next) {
   }
 }
 
-// GET /api/admin/dashboard/analytics — today/week/month sales + best categories
 export async function getAnalytics(req, res, next) {
   try {
     const now = new Date();

@@ -1,7 +1,6 @@
 import User from "../models/User.js";
 import Order from "../models/Order.js";
 
-// GET /api/admin/users — list customers with search/filter
 export async function getUsers(req, res, next) {
   try {
     const { search, status } = req.query;
@@ -18,7 +17,6 @@ export async function getUsers(req, res, next) {
 
     const users = await User.find(filter).sort({ createdAt: -1 });
 
-    // Attach order stats per customer
     const withStats = await Promise.all(
       users.map(async (u) => {
         const orders = await Order.find({ user: u._id });
@@ -37,7 +35,6 @@ export async function getUsers(req, res, next) {
   }
 }
 
-// GET /api/admin/users/:id
 export async function getUserById(req, res, next) {
   try {
     const user = await User.findById(req.params.id);
@@ -55,7 +52,6 @@ export async function getUserById(req, res, next) {
   }
 }
 
-// PUT /api/admin/users/:id/block
 export async function blockUser(req, res, next) {
   try {
     const user = await User.findByIdAndUpdate(
@@ -70,7 +66,6 @@ export async function blockUser(req, res, next) {
   }
 }
 
-// PUT /api/admin/users/:id/unblock
 export async function unblockUser(req, res, next) {
   try {
     const user = await User.findByIdAndUpdate(

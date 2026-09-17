@@ -2,7 +2,6 @@ import Order from "../models/Order.js";
 import Product from "../models/Product.js";
 import { createNotification } from "./notificationController.js";
 
-// GET /api/orders — customer's own orders
 export async function getOrders(req, res, next) {
   try {
     const orders = await Order.find({ user: req.user._id }).sort({ createdAt: -1 });
@@ -12,7 +11,6 @@ export async function getOrders(req, res, next) {
   }
 }
 
-// GET /api/orders/:id — customer's own order
 export async function getOrderById(req, res, next) {
   try {
     const order = await Order.findById(req.params.id);
@@ -26,7 +24,6 @@ export async function getOrderById(req, res, next) {
   }
 }
 
-// POST /api/orders — customer places an order (protected)
 export async function createOrder(req, res, next) {
   try {
     const { items, shippingInfo, total, paymentMethod } = req.body;
@@ -35,7 +32,6 @@ export async function createOrder(req, res, next) {
       return res.status(400).json({ message: "Cannot place an order with an empty cart." });
     }
 
-    // Reduce stock for each ordered item
     for (const item of items) {
       if (item.id) {
         await Product.findByIdAndUpdate(item.id, { $inc: { stock: -item.quantity } });
@@ -67,9 +63,6 @@ export async function createOrder(req, res, next) {
   }
 }
 
-// ===== ADMIN =====
-
-// GET /api/admin/orders — all orders, with filters
 export async function getAdminOrders(req, res, next) {
   try {
     const { status, search, dateFrom, dateTo } = req.query;
@@ -100,7 +93,6 @@ export async function getAdminOrders(req, res, next) {
   }
 }
 
-// GET /api/admin/orders/:id
 export async function getAdminOrderById(req, res, next) {
   try {
     const order = await Order.findById(req.params.id).populate("user", "name email");
@@ -111,7 +103,6 @@ export async function getAdminOrderById(req, res, next) {
   }
 }
 
-// PUT /api/admin/orders/:id/status
 export async function updateOrderStatus(req, res, next) {
   try {
     const { status } = req.body;
